@@ -1,22 +1,19 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@tsconfig/strictest/tsconfig.json",
+  "files": [ ],
+  "include": [ ],
+  "extends": "./tsconfig.shared.json",
   "compilerOptions": {
-    "allowSyntheticDefaultImports": false,
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
-    "module": "ESNext",
-    "allowJs": false,
-    "checkJs": false,
-    "target": "ESNext",
-    "moduleResolution": "NodeNext"
+    "paths": {
+      "@/*": [ "./*/apps/" ]
+    }
   },
-  "include": [
-    "src/"
-  ],
-  "exclude": [
-    "node_modules/*"
+  "references": [
+    {
+      "path": "server/tsconfig.json"
+    }
+    // TODO,
+    // {
+    //   "path": "web/tsconfig.json"
+    // }
   ]
 }
