@@ -1,14 +1,19 @@
 {
-  "name": "config-template",
-  "version": "0.0.1",
-  "description": "Inicializar um repositório com todas as configurações necessárias",
+  "name": "ifood-todolist-project",
   "private": "true",
-  "type": "module",
+  "description": "Projeto de lista de tarefas do ifood",
+  "workspaces": [
+    "apps/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DavidWesley/ifood-todolist-project.git"
+  },
   "scripts": {
-    "test": "",
+    "build": "",
     "lint": "eslint",
     "lint:fix": "eslint . --ext .js,.ts --fix",
-    "lint:all": "eslint src --ext .js,.ts --max-warnings=0 --fix",
+    "lint:all": "eslint apps --ext .js,.ts --max-warnings=0 --fix",
     "prepare": "husky install"
   },
   "author": {
@@ -16,7 +21,26 @@
     "email": "contato.dwesley@outlook.com",
     "url": "https://github.com/DavidWesley"
   },
-  "license": "ISC",
+  "license": "LGPL-3.0-only",
+  "homepage": "https://github.com/DavidWesley/ifood-todolist-project",
+  "contributors": [
+    {
+      "name": "dyda91",
+      "url": "https://github.com/dyda91"
+    },
+    {
+      "name": "RudsonSantana",
+      "url": "https://github.com/RudsonSantana"
+    },
+    {
+      "name": "corujaglaukopis",
+      "url": "https://github.com/corujaglaukopis"
+    },
+    {
+      "name": "DavidWesley",
+      "url": "https://github.com/DavidWesley"
+    }
+  ],
   "devDependencies": {
     "@commitlint/cli": "^17.8.0",
     "@commitlint/config-conventional": "^17.8.0",
