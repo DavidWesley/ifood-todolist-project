@@ -7,7 +7,7 @@ export default defineConfig({
     clean: true,
     skipNodeModulesBundle: true,
     format: "esm",
-    dts: true,
+    dts: false,
     platform: "node",
     keepNames: true,
 })
