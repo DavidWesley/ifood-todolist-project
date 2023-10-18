@@ -27,6 +27,7 @@ Detalhamento dos relacionamentos entre as entidades do servidor do projeto.
 | `id`                | Identificador único da tarefa (UUID)        | UUID     |            |
 | `title`             | Título da tarefa                            | String   |            |
 | `description`       | Descrição da tarefa                         | String   |            |
+| `startAt`           | Data de início da tarefa                    | DateTime |            |
 | `dueDate`           | Data de vencimento da tarefa                | DateTime |            |
 | `isCompleted`       | Estado de conclusão da tarefa               | Boolean  |            |
 | `userId`            | ID do usuário associado à tarefa (UUID)     | UUID     | Users (ID) |
