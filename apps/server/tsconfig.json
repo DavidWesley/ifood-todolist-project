@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": [
+    "@tsconfig/strictest/tsconfig.json",
+    "../../tsconfig.shared.json"
+  ],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": false,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "target": "ES2021",
+    "lib": [ "ES2021" ],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowJs": false,
+    "checkJs": false,
+    "removeComments": false,
+    "downlevelIteration": true,
+    "resolveJsonModule": true,
+    "incremental": true,
+
+    "baseUrl": ".",
+    "composite": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "paths": {
+      "@/*": [ "./src/*" ]
+    }
+  },
+  "include": [ "src", "test" ],
+  "exclude": [ "node_modules/*", "dist/*" ]
+}

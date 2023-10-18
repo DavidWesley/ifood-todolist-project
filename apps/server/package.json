@@ -1,0 +1,31 @@
+{
+  "name": "ifood-todolist-server",
+  "version": "0.0.1",
+  "description": "Servidor de lista de tarefas do ifood",
+  "private": "true",
+  "type": "module",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">= 18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DavidWesley/ifood-todolist-project.git",
+    "directory": "apps/server"
+  },
+  "scripts": {
+    "test": "",
+    "start": "tsx src/main.ts",
+    "start:watch": "tsx watch src/main.ts",
+    "build": "tsup src"
+  },
+  "license": "LGPL-3.0-only",
+  "homepage": "https://github.com/DavidWesley/ifood-todolist-project",
+  "devDependencies": {
+    "tsup": "^7.2.0"
+  }
+}
