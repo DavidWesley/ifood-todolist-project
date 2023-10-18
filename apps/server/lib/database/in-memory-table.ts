@@ -28,40 +28,40 @@ interface InMemoryModelQueryFilter {
     (value: string): boolean
 }
 
-export class InMemoryTable<T extends Partial<InMemoryTableModel>, U = keyof Omit<T, keyof InMemoryTableModel>> {
-    private table = new Map<UUID, Map<keyof T, string>>()
+export class InMemoryTable<M extends Partial<InMemoryTableModel>, K = keyof Omit<M, keyof InMemoryTableModel>> {
+    private table = new Map<UUID, Map<keyof M, string>>()
 
     /**
      * Initializes a new instance of the class.
      *
      * @param {string} tableName - The name of the table.
-     * @param {InMemoryTableConfig<U>} config - The configuration for the in-memory table.
+     * @param {InMemoryTableConfig<K>} config - The configuration for the in-memory table.
      */
     constructor(
         private readonly tableName: string,
-        private config: InMemoryTableConfig<U>
+        private config: InMemoryTableConfig<K>
     ) { }
 
     /**
      * Inserts a new record into the table.
      *
-     * @param {Record<U, string>} data - The data to be inserted into the table.
+     * @param {Record<K, string>} data - The data to be inserted into the table.
      * @return {UUID} - The generated UUID for the inserted record.
      */
-    insert(data: Record<U, string>): UUID {
+    insert(data: Record<K, string>): UUID {
         const id = randomUUID()
         const createdAt = new Date().toISOString()
         const updatedAt = new Date().toISOString()
 
-        const row = new Map<keyof T, string>()
+        const row = new Map<keyof M, string>()
 
         for (const [name, options] of this.config.columns) {
             if (Reflect.has(data, String(name))) {
                 const value = Reflect.get(data, String(name))
-                if (options.validators?.every((validator) => validator(value))) row.set(name as keyof T, value)
+                if (options.validators?.every((validator) => validator(value))) row.set(name as keyof M, value)
                 else throw new TypeError(`Invalid value for column ${name}: ${value}`)
             } else if (options.defaultValue) {
-                row.set(name as keyof T, options.defaultValue())
+                row.set(name as keyof M, options.defaultValue())
             } else {
                 throw new Error(`Missing value for column ${name}`)
             }
@@ -80,11 +80,11 @@ export class InMemoryTable<T extends Partial<InMemoryTableModel>, U = keyof Omit
     /**
      * Selects rows from the table that match the given query.
      *
-     * @param {InMemoryModelQuery<T>} query - The query object used to filter the rows.
-     * @return {Array<Map<keyof T, string>>} - An array of maps representing the rows that match the query.
+     * @param {InMemoryModelQuery<M>} query - The query object used to filter the rows.
+     * @return {Array<Map<keyof M, string>>} - An array of maps representing the rows that match the query.
      */
-    select(query: InMemoryModelQuery<T>): Array<Map<keyof T, string>> {
-        const results: Map<keyof T, string>[] = []
+    select(query: InMemoryModelQuery<M>): Array<Map<keyof M, string>> {
+        const results: Map<keyof M, string>[] = []
 
         this.table.forEach((row) => {
             let isValid = true
@@ -102,7 +102,7 @@ export class InMemoryTable<T extends Partial<InMemoryTableModel>, U = keyof Omit
 
         if (query.columns?.length) {
             return results.map((row) => {
-                const formattedRow = new Map<keyof T, string>()
+                const formattedRow = new Map<keyof M, string>()
 
                 for (const name of query.columns ?? []) {
                     if (row.has(name)) formattedRow.set(name, row.get(name)!)
@@ -119,19 +119,19 @@ export class InMemoryTable<T extends Partial<InMemoryTableModel>, U = keyof Omit
      * Updates a row in the table with the specified ID using the provided data.
      *
      * @param {UUID} id - The ID of the row to update.
-     * @param {Record<U, string>} data - The data to update the row with.
+     * @param {Record<K, string>} data - The data to update the row with.
      * @throws {Error} If the row with the specified ID is not found.
      * @throws {TypeError} If any of the values in the data are invalid for their respective columns.
      * @return {void}
      */
-    update(id: UUID, data: Record<U, string>): void {
+    update(id: UUID, data: Record<K, string>): void {
         const row = this.table.get(id)
         if (!row) throw new Error(`Row ${id} not found`)
 
         for (const [name, options] of this.config.columns) {
             if (Reflect.has(data, String(name))) {
                 const value = Reflect.get(data, String(name))
-                if (options.validators?.every((validator) => validator(value))) row.set(name as keyof T, value)
+                if (options.validators?.every((validator) => validator(value))) row.set(name as keyof M, value)
                 else throw new TypeError(`Invalid value for column ${name}: ${value}`)
             }
         }
@@ -153,18 +153,18 @@ export class InMemoryTable<T extends Partial<InMemoryTableModel>, U = keyof Omit
      * Retrieves a map of properties for the given ID.
      *
      * @param {UUID} id - The ID of the object to retrieve.
-     * @return {Map<keyof T, string> | undefined} - The map of properties for the given ID, or undefined if the ID does not exist.
+     * @return {Map<keyof M, string> | undefined} - The map of properties for the given ID, or undefined if the ID does not exist.
      */
-    get(id: UUID): Map<keyof T, string> | undefined {
+    get(id: UUID): Map<keyof M, string> | undefined {
         return this.table.get(id)
     }
 
     /**
      * Returns an array of maps containing the values of the table.
      *
-     * @return {Array<Map<keyof T, string>>} An array of maps representing the table values.
+     * @return {Array<Map<keyof M, string>>} An array of maps representing the table values.
      */
-    getAll(): Array<Map<keyof T, string>> {
+    getAll(): Array<Map<keyof M, string>> {
         return Array.from(this.table.values())
     }
 
@@ -180,9 +180,9 @@ export class InMemoryTable<T extends Partial<InMemoryTableModel>, U = keyof Omit
     /**
      * Retrieves the names of the columns.
      *
-     * @return {Array<U>} An array of column names.
+     * @return {Array<K>} An array of column names.
      */
-    getColumnsNames(): Array<U> {
+    getColumnsNames(): Array<K> {
         return this.config.columns.map(([name]) => name)
     }
 }
