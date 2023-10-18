@@ -1,10 +1,17 @@
 {
-	"cSpell.enableFiletypes": [
-		"!json",
-		"js"
-	],
-	"cSpell.words": [
-		"Beecrowd"
-	],
-	"typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.enableFiletypes": [
+    "!json",
+    "js"
+  ],
+  "cSpell.words": [
+    "fastify",
+    "tsup"
+  ],
+  "editor.formatOnSave": true,
+  "typescript.suggest.autoImports": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
 }
