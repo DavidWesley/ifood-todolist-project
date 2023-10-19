@@ -58,7 +58,8 @@ export class InMemoryTable<M extends Partial<InMemoryTableModel>, K = keyof Omit
         for (const [name, options] of this.config.columns) {
             if (Reflect.has(data, String(name))) {
                 const value = Reflect.get(data, String(name))
-                if (options.validators?.every((validator) => validator(value))) row.set(name as keyof M, value)
+                if (Boolean(options.validators?.length) === false) continue
+                else if (options.validators?.every((validator) => validator(value))) row.set(name as keyof M, value)
                 else throw new TypeError(`Invalid value for column ${name}: ${value}`)
             } else if (options.defaultValue) {
                 row.set(name as keyof M, options.defaultValue())
