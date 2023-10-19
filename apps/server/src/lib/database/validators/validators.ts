@@ -1,4 +1,4 @@
-import { DateTimeString } from "../in-memory-table"
+import { DateTimeString } from "../in-memory-table.ts"
 
 export type ValidatorFunction = (value: string) => boolean
 

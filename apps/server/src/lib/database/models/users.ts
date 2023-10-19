@@ -1,5 +1,5 @@
-import { InMemoryTable, InMemoryTableModel } from "../in-memory-table"
-import { ValidatorFunction, Validators } from "../validators/validators"
+import { InMemoryTable, InMemoryTableModel } from "../in-memory-table.ts"
+import { ValidatorFunction, Validators } from "../validators/validators.ts"
 
 export interface UserModel extends Partial<InMemoryTableModel> {
     username: string

@@ -1,6 +1,6 @@
-import { DateTimeString, InMemoryTable, InMemoryTableModel } from "../in-memory-table"
-import { Validators } from "../validators/validators"
-import { UserModel } from "./users"
+import { DateTimeString, InMemoryTable, InMemoryTableModel } from "../in-memory-table.ts"
+import { Validators } from "../validators/validators.ts"
+import { UserModel } from "./users.ts"
 
 interface TaskModel extends Partial<InMemoryTableModel> {
     title: string

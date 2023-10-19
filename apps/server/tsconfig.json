@@ -27,6 +27,6 @@
       "@/*": [ "./src/*" ]
     }
   },
-  "include": [ "src", "test", "lib" ],
+  "include": [ "src", "test" ],
   "exclude": [ "node_modules/*", "dist/*" ]
 }
