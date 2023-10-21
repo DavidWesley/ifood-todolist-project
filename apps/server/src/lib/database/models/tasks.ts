@@ -2,13 +2,13 @@ import { DateTimeString, InMemoryTable, InMemoryTableModel } from "../in-memory-
 import { Validators } from "../validators/validators.ts"
 import { UserModel } from "./users.ts"
 
-interface TaskModel extends Partial<InMemoryTableModel> {
+export interface TaskModel extends Partial<InMemoryTableModel> {
     title: string
     description: string
     startAt: DateTimeString
     dueDate: DateTimeString
     isCompleted: boolean
-    userId: Required<UserModel["id"]>
+    userID: Required<UserModel["id"]>
 }
 
 export const tasks = new InMemoryTable<TaskModel>("tasks", {
@@ -18,6 +18,6 @@ export const tasks = new InMemoryTable<TaskModel>("tasks", {
         ["startAt", { validators: [Validators.isDateTimeString], defaultValue: () => new Date().toISOString() }],
         ["dueDate", { validators: [Validators.isDateTimeString] }],
         ["isCompleted", { validators: [Validators.isBoolean], defaultValue: () => "false" }],
-        ["userId", { validators: [Validators.isUUID] }],
+        ["userID", { validators: [Validators.isUUID] }],
     ],
 })
