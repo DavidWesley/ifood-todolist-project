@@ -40,7 +40,7 @@ export class InMemoryTable<M extends Partial<InMemoryTableModel>, K = keyof Omit
     constructor(
         private readonly tableName: string,
         private config: InMemoryTableConfig<K>
-    ) { }
+    ) {}
 
     /**
      * Inserts a new record into the table.
@@ -68,10 +68,9 @@ export class InMemoryTable<M extends Partial<InMemoryTableModel>, K = keyof Omit
             }
         }
 
-        row
-            .set("id", id)
-            .set("createdAt", createdAt)
-            .set("updatedAt", updatedAt)
+        row.set("id", id)
+        row.set("createdAt", createdAt)
+        row.set("updatedAt", updatedAt)
 
         this.table.set(id, row)
 
@@ -125,13 +124,14 @@ export class InMemoryTable<M extends Partial<InMemoryTableModel>, K = keyof Omit
      * @throws {TypeError} If any of the values in the data are invalid for their respective columns.
      * @return {void}
      */
-    update(id: UUID, data: Record<K, string>): void {
+    update(id: UUID, data: Partial<Record<K, string>>): void {
         const row = this.table.get(id)
         if (!row) throw new Error(`Row ${id} not found`)
 
         for (const [name, options] of this.config.columns) {
             if (Reflect.has(data, String(name))) {
-                const value = Reflect.get(data, String(name))
+                const value = Reflect.get(data, String(name))!
+
                 if (Boolean(options.validators?.length) === false) row.set(name as keyof M, value)
                 else if (options.validators?.every((validator) => validator(value))) row.set(name as keyof M, value)
                 else throw new TypeError(`Invalid value for column ${name}: ${value}`)
