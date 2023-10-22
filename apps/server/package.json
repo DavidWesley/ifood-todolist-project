@@ -20,16 +20,23 @@
   "scripts": {
     "test": "",
     "start": "tsx src/main.ts",
-    "start:watch": "tsx watch src/main.ts",
+    "dev": "cross-env PORT=3333 && tsx watch src/main.ts",
     "build": "tsup src"
   },
   "license": "LGPL-3.0-only",
   "homepage": "https://github.com/DavidWesley/ifood-todolist-project",
   "devDependencies": {
+    "@types/node": "^20.8.7",
+    "cross-env": "^7.0.3",
+    "pino-pretty": "^10.2.3",
     "tsup": "^7.2.0"
   },
   "dependencies": {
+    "@fastify/cors": "^8.4.0",
+    "@fastify/rate-limit": "^8.0.3",
     "dotenv": "^16.3.1",
+    "fastify": "^4.24.3",
+    "http-status-codes": "^2.3.0",
     "zod": "^3.22.4"
   }
 }
