@@ -1,5 +1,5 @@
-import { InMemoryTable, InMemoryTableModel } from "../in-memory-table.ts"
-import { ValidatorFunction, Validators } from "../validators/validators.ts"
+import { InMemoryTable, InMemoryTableModel } from "../lib/database/in-memory-table.ts"
+import { ValidatorFunction, Validators } from "../lib/database/validators/validators.ts"
 
 export interface UserModel extends Partial<InMemoryTableModel> {
     username: string
@@ -11,7 +11,7 @@ const MIN_USERNAME_LENGTH = 5
 const MAX_USERNAME_LENGTH = 20
 
 const UserValidators = Object.freeze({
-    isPassword: (value: string): boolean => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,32}$/.test(value),
+    isPassword: (value: string): boolean => /^[a-zA-Z\d]{8,32}$/.test(value),
     isValidUsername: (value: string): boolean => value.length >= MIN_USERNAME_LENGTH && value.length <= MAX_USERNAME_LENGTH && /^[a-zA-Z0-9]+$/.test(value),
 }) satisfies Readonly<Record<string, ValidatorFunction>>
 
