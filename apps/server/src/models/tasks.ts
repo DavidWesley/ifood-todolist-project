@@ -8,7 +8,7 @@ export interface TaskModel extends Partial<InMemoryTableModel> {
     startAt: DateTimeString
     dueDate: DateTimeString
     isCompleted: boolean
-    userID: Required<UserModel["id"]>
+    userId: Required<UserModel["id"]>
 }
 
 export const tasks = new InMemoryTable<TaskModel>("tasks", {
@@ -18,6 +18,6 @@ export const tasks = new InMemoryTable<TaskModel>("tasks", {
         ["startAt", { validators: [Validators.isDateTimeString], defaultValue: () => new Date().toISOString() }],
         ["dueDate", { validators: [Validators.isDateTimeString] }],
         ["isCompleted", { validators: [Validators.isBoolean], defaultValue: () => "false" }],
-        ["userID", { validators: [Validators.isUUID] }],
+        ["userId", { validators: [Validators.isUUID] }],
     ],
 })
