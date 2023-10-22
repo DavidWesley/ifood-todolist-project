@@ -19,7 +19,7 @@ interface InMemoryTableColumnOptions {
     defaultValue?: () => string
 }
 
-interface InMemoryModelQuery<K> {
+export interface InMemoryModelQuery<K> {
     filters?: Partial<Record<keyof K, InMemoryModelQueryFilter>>
     columns?: Array<keyof K>
 }
