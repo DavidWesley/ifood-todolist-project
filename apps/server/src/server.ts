@@ -6,6 +6,7 @@ import { StatusCodes } from "http-status-codes"
 import { ENV } from "@/lib/env.ts"
 import { logger } from "@/lib/logger.ts"
 
+import { tasksRoutes } from "@/routes/tasks.ts"
 import { usersRoutes } from "@/routes/users.ts"
 
 export const server = Fastify({
@@ -38,4 +39,5 @@ server.get("/check", async (_, res) => {
 })
 
 //// ROUTES ////
+server.register(tasksRoutes, { prefix: "/tasks" })
 server.register(usersRoutes, { prefix: "/users" })
