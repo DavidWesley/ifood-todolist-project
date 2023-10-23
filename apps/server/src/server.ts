@@ -1,10 +1,12 @@
 import { fastifyCors } from "@fastify/cors"
 import { fastifyRateLimit } from "@fastify/rate-limit"
 import Fastify from "fastify"
+import { StatusCodes } from "http-status-codes"
 
 import { ENV } from "@/lib/env.ts"
 import { logger } from "@/lib/logger.ts"
-import { StatusCodes } from "http-status-codes"
+
+import { usersRoutes } from "@/routes/users.ts"
 
 export const server = Fastify({
     logger: logger[ENV.NODE_ENV] ?? false,
@@ -27,6 +29,13 @@ server.register(fastifyRateLimit, {
     continueExceeding: false,
 })
 
+server.get("/", async (_, res) => {
+    return res.status(StatusCodes.OK).send("Home page")
+})
+
 server.get("/check", async (_, res) => {
     return res.status(StatusCodes.OK).send()
 })
+
+//// ROUTES ////
+server.register(usersRoutes, { prefix: "/users" })
