@@ -17,6 +17,7 @@ interface InMemoryTableConfig<K> {
 interface InMemoryTableColumnOptions {
     validators?: Array<(value: string) => boolean>
     defaultValue?: () => string
+    unique?: boolean
 }
 
 export interface InMemoryModelQuery<K> {
