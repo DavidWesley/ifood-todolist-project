@@ -6,14 +6,19 @@ Detalhamento dos relacionamentos entre as entidades do servidor do projeto.
 
 ### Users (Usuários)
 
-| Nome da Propriedade | Descrição                                    | Tipo     |
-| ------------------- | -------------------------------------------- | -------- |
-| `id`                | Identificador único do usuário (UUID)        | UUID     |
-| `username`          | Nome de usuário                              | String   |
-| `email`             | Endereço de e-mail do usuário                | String   |
-| `password`          | Senha do usuário (criptografada)             | String   |
-| `createdAt`         | Data e hora de criação do usuário            | DateTime |
-| `updatedAt`         | Data e hora da última atualização do usuário | DateTime |
+Claro, vou fazer o mesmo para a tabela de usuários. Aqui está a tabela atualizada:
+
+### Users (Usuários)
+
+| Nome da Propriedade | Descrição                                    | Tipo     | Relations | Único |
+| ------------------- | -------------------------------------------- | -------- | --------- | ----- |
+| `id`                | Identificador único do usuário (UUID)        | UUID     |           | Sim   |
+| `username`          | Nome de usuário                              | String   |           | Sim   |
+| `email`             | Endereço de e-mail do usuário                | String   |           | Sim   |
+| `salt`              | Salt para criptografia da senha              | String   |           |       |
+| `hash`              | Hash criptografado da senha                  | String   |           |       |
+| `createdAt`         | Data e hora de criação do usuário            | DateTime |           |       |
+| `updatedAt`         | Data e hora da última atualização do usuário | DateTime |           |       |
 
 **Descrição:**
 
@@ -22,17 +27,18 @@ Detalhamento dos relacionamentos entre as entidades do servidor do projeto.
 
 ### Tasks (Tarefas)
 
-| Nome da Propriedade | Descrição                                   | Tipo     | Relations  |
-| ------------------- | ------------------------------------------- | -------- | ---------- |
-| `id`                | Identificador único da tarefa (UUID)        | UUID     |            |
-| `title`             | Título da tarefa                            | String   |            |
-| `description`       | Descrição da tarefa                         | String   |            |
-| `startAt`           | Data de início da tarefa                    | DateTime |            |
-| `dueDate`           | Data de vencimento da tarefa                | DateTime |            |
-| `isCompleted`       | Estado de conclusão da tarefa               | Boolean  |            |
-| `userId`            | ID do usuário associado à tarefa (UUID)     | UUID     | Users (ID) |
-| `createdAt`         | Data e hora de criação da tarefa            | DateTime |            |
-| `updatedAt`         | Data e hora da última atualização da tarefa | DateTime |            |
+| Nome da Propriedade | Descrição                                   | Tipo     | Relations  | Único |
+| ------------------- | ------------------------------------------- | -------- | ---------- | ----- |
+| `id`                | Identificador único da tarefa (UUID)        | UUID     |            | Sim   |
+| `title`             | Título da tarefa                            | String   |            |       |
+| `description`       | Descrição da tarefa                         | String   |            |       |
+| `startAt`           | Data de início da tarefa                    | DateTime |            |       |
+| `dueDate`           | Data de vencimento da tarefa                | DateTime |            |       |
+| `isCompleted`       | Estado de conclusão da tarefa               | Boolean  |            |       |
+| `userId`            | ID do usuário associado à tarefa (UUID)     | UUID     | Users (ID) |       |
+| `createdAt`         | Data e hora de criação da tarefa            | DateTime |            |       |
+| `updatedAt`         | Data e hora da última atualização da tarefa | DateTime |            |       |
+
 
 **Descrição:**
 
