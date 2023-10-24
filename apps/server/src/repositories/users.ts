@@ -16,7 +16,8 @@ export class UsersRepository implements UserRepository<UserModel> {
 
             email: raw.get("email")!,
             username: raw.get("username")!,
-            password: raw.get("password")!,
+            salt: raw.get("salt")!,
+            hash: raw.get("hash")!,
         } satisfies UserModel
 
         return user
@@ -27,7 +28,8 @@ export class UsersRepository implements UserRepository<UserModel> {
             Object.entries({
                 email: data?.email ?? undefined,
                 username: data?.username ?? undefined,
-                password: data?.password ?? undefined,
+                salt: data?.salt ?? undefined,
+                hash: data?.hash ?? undefined,
             } as Partial<UserModel>).filter(([, value]) => value !== undefined)
         )
 
@@ -42,7 +44,8 @@ export class UsersRepository implements UserRepository<UserModel> {
         const id = await database.users.insert({
             username: data.username,
             email: data.email,
-            password: data.password,
+            salt: data.salt,
+            hash: data.hash,
         })
 
         return id
@@ -68,17 +71,16 @@ export class UsersRepository implements UserRepository<UserModel> {
         return UsersRepository.convertRawIntoLiteralObject(userRaw)
     }
 
-    async update(id: UUID, data: Partial<UserModel>): Promise<void> {
+    async update(id: UUID, data: Partial<Omit<UserModel, "hash" | "salt">>): Promise<void> {
         const userRaw = await database.users.get(id)
         if (userRaw === undefined) throw new Error("User not found")
 
         const userChangeableProperties = UsersRepository.copyNonNullChangeableProperties(data)
 
         for (const key of userRaw.keys()) {
-            if (key === "password") continue
             if (Reflect.has(userChangeableProperties, key)) {
                 const isAlreadyExistsUserWithSameValue = await this.count({
-                    [key]: (value: string) => value === userRaw.get(key),
+                    [key]: (value: string) => value === userChangeableProperties[key],
                 })
 
                 if (isAlreadyExistsUserWithSameValue) throw new Error("User with same value already exists")

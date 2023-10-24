@@ -1,7 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { StatusCodes } from "http-status-codes"
 
+import { hashPassword } from "@/lib/crypto.ts"
 import { UserModel } from "@/models/users.ts"
+import tasksRepository from "@/repositories/tasks.ts"
 import usersRepository from "@/repositories/users.ts"
 import { createUserBodySchema, updateUserBodySchema, userParamsSchema } from "@/schemas/zod.ts"
 
@@ -50,10 +52,13 @@ const checkUserExistsByProperties = async (request: FastifyRequest, response: Fa
 const createUser = async (request: FastifyRequest, response: FastifyReply) => {
     const body = createUserBodySchema.parse(request.body)
 
+    const { salt, hash } = hashPassword(body.password)
+
     const userId = await usersRepository.create({
         email: body.email,
         username: body.username,
-        password: body.password,
+        salt: salt,
+        hash: hash,
     })
 
     return response.status(StatusCodes.CREATED).send({ id: userId })
@@ -64,6 +69,7 @@ const getUserById = async (request: FastifyRequest, response: FastifyReply) => {
 
     const user = await usersRepository.findById(params.userId)
 
+    // TODO: Exclude properties that should not be shown as "hash" and "salt"
     return response.status(StatusCodes.OK).send({ data: user })
 }
 
@@ -71,6 +77,9 @@ const deleteUserById = async (request: FastifyRequest, response: FastifyReply) =
     const params = userParamsSchema.parse(request.params)
 
     await usersRepository.delete(params.userId)
+    await tasksRepository.deleteMany({
+        userId: (value: string) => value === params.userId,
+    })
 
     return response.status(StatusCodes.NO_CONTENT).send()
 }
@@ -81,11 +90,21 @@ const updateUser = async (request: FastifyRequest, response: FastifyReply) => {
 
     const updatedUserProperties = Object.fromEntries(
         Object.entries({
+            username: body?.username ?? undefined,
             email: body?.email ?? undefined,
-            password: body?.email ?? undefined,
-            username: body?.email ?? undefined,
-        } as UserModel).filter(([, value]) => value !== undefined)
+        } as Partial<UserModel>).filter(([, value]) => value !== undefined)
     )
+
+    for (const property in updatedUserProperties) {
+        if ((await usersRepository.count({ [property]: (value: string) => value === updatedUserProperties[property] })) !== 0) {
+            return response.status(StatusCodes.CONFLICT).send({
+                error: {
+                    message: "Could not update user, property already exists",
+                    scope: updateUser.name.toString(),
+                },
+            })
+        }
+    }
 
     try {
         await usersRepository.update(params.userId, updatedUserProperties)
@@ -102,6 +121,11 @@ const updateUser = async (request: FastifyRequest, response: FastifyReply) => {
     }
 }
 
+const getAllUser = async (_: FastifyRequest, response: FastifyReply) => {
+    const users = await usersRepository.findAll()
+    return response.status(StatusCodes.OK).send({ data: users })
+}
+
 const usersServices = {
     checkUserExistsById,
     checkUserExistsByProperties,
@@ -109,6 +133,7 @@ const usersServices = {
     createUser,
     updateUser,
     deleteUserById,
+    getAllUser,
 }
 
 export default usersServices

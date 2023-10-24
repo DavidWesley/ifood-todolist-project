@@ -45,4 +45,7 @@ export async function usersRoutes(app: FastifyInstance) {
         },
         usersServices.updateUser
     )
+
+    // IMPORTANT: Usar apenas para fins de teste, no futuro essa rota será removida
+    app.get("/", {}, usersServices.getAllUser)
 }
