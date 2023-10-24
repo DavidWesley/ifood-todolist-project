@@ -6,10 +6,6 @@ Detalhamento dos relacionamentos entre as entidades do servidor do projeto.
 
 ### Users (Usuários)
 
-Claro, vou fazer o mesmo para a tabela de usuários. Aqui está a tabela atualizada:
-
-### Users (Usuários)
-
 | Nome da Propriedade | Descrição                                    | Tipo     | Relations | Único |
 | ------------------- | -------------------------------------------- | -------- | --------- | ----- |
 | `id`                | Identificador único do usuário (UUID)        | UUID     |           | Sim   |
