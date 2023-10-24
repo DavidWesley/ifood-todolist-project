@@ -27,10 +27,15 @@ export const changeableTaskBodySchema = z.object<ChangeableTaskPropertiesObjectT
     isCompleted: z.boolean(),
 })
 
-export const createTaskBodySchema = changeableTaskBodySchema.partial({
+export const createTaskBodySchema = changeableTaskBodySchema
+    .partial({
         title: true,
         description: true,
         isCompleted: true,
+    })
+    .required({
+        dueDate: true,
+        startAt: true,
     })
 
 export const updateTaskBodySchema = changeableTaskBodySchema.partial({
