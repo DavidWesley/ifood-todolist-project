@@ -20,7 +20,7 @@
   "scripts": {
     "test": "",
     "start": "tsx src/main.ts",
-    "dev": "cross-env PORT=3333 && tsx watch src/main.ts",
+    "dev": "cross-env PORT=3333 tsx watch src/main.ts",
     "build": "tsup src"
   },
   "license": "LGPL-3.0-only",
