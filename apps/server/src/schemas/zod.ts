@@ -1,6 +1,7 @@
 import { DateTimeString, InMemoryTableModel } from "@/lib/database/in-memory-table.ts"
 import { Validators } from "@/lib/database/validators/validators.ts"
 import { TaskModel } from "@/models/tasks.ts"
+import { UserModel } from "@/models/users.ts"
 import { z } from "zod"
 
 //// COMMONS ////
@@ -27,10 +28,10 @@ export const changeableTaskBodySchema = z.object<ChangeableTaskPropertiesObjectT
 })
 
 export const createTaskBodySchema = changeableTaskBodySchema.partial({
-    title: true,
-    description: true,
-    isCompleted: true,
-})
+        title: true,
+        description: true,
+        isCompleted: true,
+    })
 
 export const updateTaskBodySchema = changeableTaskBodySchema.partial({
     title: true,
@@ -41,20 +42,44 @@ export const updateTaskBodySchema = changeableTaskBodySchema.partial({
 })
 
 //// USERS SCHEMAS ////
+export type ChangeableUserProperties = Omit<UserModel, "hash" | "salt" | keyof InMemoryTableModel>
+
+export type ChangeableUserPropertiesObjectType = {
+    [key in keyof ChangeableUserProperties]: z.ZodType<ChangeableUserProperties[key]>
+}
+
+export const passwordSchema = z.string().min(8).max(32)
+
 export const userParamsSchema = z.object({
     userId: uuidSchema,
 })
 
-export const createUserBodySchema = z.object({
-    email: z.string().email(),
-    username: z.string().min(5).max(20),
-    password: z.string().min(8).max(32),
-})
+export const changeableUserBodySchema = z
+    .object<ChangeableUserPropertiesObjectType>({
+        email: z.string().email(),
+        username: z.string().min(5).max(20),
+    })
+    .extend({
+        password: passwordSchema,
+    })
 
-export const updateUserBodySchema = createUserBodySchema.partial({
+export const createUserBodySchema = changeableUserBodySchema.required({
     email: true,
     username: true,
     password: true,
+})
+
+export const updateUserBodySchema = changeableUserBodySchema
+    .omit({
+        password: true,
+    })
+    .partial({
+        email: true,
+        username: true,
+    })
+
+export const updateUserPasswordBodySchema = z.object({
+    password: passwordSchema,
 })
 
 //// MIXED SCHEMAS ////
