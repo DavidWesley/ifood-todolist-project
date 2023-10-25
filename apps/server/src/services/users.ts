@@ -31,7 +31,7 @@ const checkUserExistsById = async (request: FastifyRequest, response: FastifyRep
 
 const checkUserExistsByProperties = async (request: FastifyRequest, response: FastifyReply) => {
     const scope = checkUserExistsByProperties.name.toString()
-    const body = createUserBodySchema.safeParse(request.body)
+    const body = createUserBodySchema.partial().required({ email: true }).safeParse(request.body)
 
     if (body.success === false) {
         return response.code(StatusCodes.BAD_REQUEST).send({
@@ -42,11 +42,14 @@ const checkUserExistsByProperties = async (request: FastifyRequest, response: Fa
         })
     }
 
-    if (
-        (await usersRepository.count({ email: (value: string) => value === body.data.email })) ||
-        (await usersRepository.count({ username: (value: string) => value === body.data.username }))
-    )
-        return response.redirect(StatusCodes.SEE_OTHER, "/")
+    if ((await usersRepository.count({ email: (value: string) => value === body.data.email })) === 0) {
+        return response.code(StatusCodes.NOT_FOUND).send({
+            error: {
+                message: "Usuário não encontrado",
+                scope,
+            },
+        })
+    }
 }
 
 const createUser = async (request: FastifyRequest, response: FastifyReply) => {
