@@ -83,6 +83,15 @@ export const updateUserBodySchema = changeableUserBodySchema
         username: true,
     })
 
+export const loginUserBodySchema = changeableUserBodySchema
+    .omit({
+        username: true,
+    })
+    .required({
+        email: true,
+        password: true,
+    })
+
 export const updateUserPasswordBodySchema = z.object({
     password: passwordSchema,
 })
