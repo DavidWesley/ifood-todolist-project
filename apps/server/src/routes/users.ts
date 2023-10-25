@@ -11,25 +11,6 @@ export async function usersRoutes(app: FastifyInstance) {
         usersServices.getUserById
     )
 
-    // TODO: implementar login e logout
-    // app.post(
-    //     "/login",
-    //     {
-    //         preHandler: [usersServices.checkUserExistsByProperties],
-    //     },
-    //     async (request, response) => {
-    //         return response.status(200)
-    //     }
-    // )
-
-    app.post(
-        "/signup",
-        {
-            preHandler: [usersServices.checkUserExistsByProperties],
-        },
-        usersServices.createUser
-    )
-
     app.delete(
         "/:userId",
         {
