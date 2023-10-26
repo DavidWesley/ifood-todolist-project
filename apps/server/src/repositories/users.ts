@@ -5,6 +5,8 @@ import { Repository } from "@/repositories/default.ts"
 
 interface UserRepository<M> extends Repository<M> {
     exists(id: UUID): Promise<boolean>
+    findByEmail(email: string): Promise<M | null>
+    findByUsername(username: string): Promise<M | null>
 }
 
 export class UsersRepository implements UserRepository<UserModel> {
@@ -40,6 +42,22 @@ export class UsersRepository implements UserRepository<UserModel> {
         return (await database.users.get(id)) !== undefined
     }
 
+    async findByEmail(email: string): Promise<UserModel | null> {
+        const [userRaw] = await database.users.select({ filters: { email: (value: string) => value === email } }, 1)
+
+        if (userRaw === undefined) return null
+
+        return UsersRepository.convertRawIntoLiteralObject(userRaw)
+    }
+
+    async findByUsername(username: string): Promise<UserModel | null> {
+        const [userRaw] = await database.users.select({ filters: { username: (value: string) => value === username } }, 1)
+
+        if (userRaw === undefined) return null
+
+        return UsersRepository.convertRawIntoLiteralObject(userRaw)
+    }
+
     async create(data: Omit<UserModel, keyof InMemoryTableModel>): Promise<UUID> {
         const id = await database.users.insert({
             username: data.username,
@@ -64,7 +82,7 @@ export class UsersRepository implements UserRepository<UserModel> {
     }
 
     async findOne(filters: InMemoryModelQuery<UserModel>["filters"] | undefined): Promise<UserModel | null> {
-        const userRaw = await database.users.select({ filters: filters! }).at(0)
+        const [userRaw] = await database.users.select({ filters: filters! }, 1)
 
         if (userRaw === undefined) return null
 
