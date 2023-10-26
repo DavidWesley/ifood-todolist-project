@@ -114,7 +114,7 @@ const updateUser = async (request: FastifyRequest, response: FastifyReply) => {
         return response.status(StatusCodes.NO_CONTENT).send()
     } catch (err) {
         if (err instanceof Error) {
-            return response.status(StatusCodes.CONFLICT).send({
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
                 error: {
                     message: `Erro ao atualizar usuário: ${err.message}`,
                     scope: updateUser.name.toString(),
