@@ -82,12 +82,19 @@ export class InMemoryTable<M extends Partial<InMemoryTableModel>, K = keyof Omit
      * Selects rows from the table that match the given query.
      *
      * @param {InMemoryModelQuery<M>} query - The query object used to filter the rows.
+     * @param {number} limit - The maximum number of rows to return.
      * @return {Array<Map<keyof M, string>>} - An array of maps representing the rows that match the query.
      */
-    select(query: InMemoryModelQuery<M>): Array<Map<keyof M, string>> {
+    select(query: InMemoryModelQuery<M>, limit: number = this.table.size): Array<Map<keyof M, string>> {
         const results: Map<keyof M, string>[] = []
 
-        this.table.forEach((row) => {
+        limit = Math.max(0, Math.min(limit, this.table.size))
+
+        for (const line of this.table) {
+            if (results.length >= limit) break
+
+            const row = line[1]
+
             let isValid = true
             for (const [columnName, value] of row) {
                 const condition = query?.filters?.[columnName] ?? ((value: string) => Boolean(value))
@@ -99,7 +106,7 @@ export class InMemoryTable<M extends Partial<InMemoryTableModel>, K = keyof Omit
             }
 
             if (isValid) results.push(row)
-        })
+        }
 
         if (query.columns?.length) {
             return results.map((row) => {
