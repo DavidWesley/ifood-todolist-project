@@ -1,10 +1,9 @@
 import type { FastifyInstance } from "fastify"
 
-import authServices from "@/services/auth.ts"
 import usersServices from "@/services/users.ts"
 
 export async function usersRoutes(app: FastifyInstance) {
-    app.addHook("onRequest", authServices.checkUserIsAuthenticated)
+    // app.addHook("onRequest", authServices.checkUserIsAuthenticated)
 
     app.get(
         "/:userId",
