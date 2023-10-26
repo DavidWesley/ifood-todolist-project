@@ -42,7 +42,7 @@ const checkUserExistsByProperties = async (request: FastifyRequest, response: Fa
         })
     }
 
-    if ((await usersRepository.count({ email: (value: string) => value === body.data.email })) === 0) {
+    if ((await usersRepository.findByEmail(body.data.email)) === null) {
         return response.code(StatusCodes.NOT_FOUND).send({
             error: {
                 message: "Usuário não encontrado",
