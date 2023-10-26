@@ -19,7 +19,7 @@ export class TasksRepository implements TaskRepository<TaskModel> {
 
             startAt: raw.get("startAt")! as DateTimeString,
             dueDate: raw.get("dueDate")! as DateTimeString,
-            isCompleted: Boolean(raw.get("isCompleted")!),
+            isCompleted: raw.get("isCompleted")! === "true" ? true : false,
 
             userId: raw.get("userId")! as UUID,
         } satisfies TaskModel
