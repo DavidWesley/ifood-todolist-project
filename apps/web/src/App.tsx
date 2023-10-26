@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import { lightTheme, darkTheme } from './themes';
 import GlobalStyles from './styled/Global';
 import { StyledMain } from './styled/Main.styled';
@@ -10,6 +10,8 @@ import TodoInput from './components/TodoInput';
 import TodoList from './components/TodoList';
 import TodoFilters from './components/TodoFilters';
 import TodoFooter from './components/TodoFooter';
+import CadastrarUsuario from './components/cadastro'
+import axios from 'axios';
 
 const LOCAL_STORAGE_KEY = 'todoApp.todos';
 
@@ -38,6 +40,7 @@ function App() {
 
   const [colorTheme, setColorTheme] = useState<string>('light');
 
+
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]') as Todo[];
     if (storedTodos) {
@@ -58,25 +61,90 @@ function App() {
     }
   });
 
+  // function handleAddTodo() {
+  //   const todoName = newTodoInput.current?.value;
+  //   if (!todoName) {
+  //     return;
+  //   }
+  //   setTodos([...todos, { id: uuidv4(), todoName, complete: false, overdue: false }]);
+  //   if (newTodoInput.current) {
+  //     newTodoInput.current.value = '';
+  //   }
+  // }
+
   function handleAddTodo() {
     const todoName = newTodoInput.current?.value;
     if (!todoName) {
       return;
     }
-    setTodos([...todos, { id: uuidv4(), todoName, complete: false, overdue: false }]);
+
+    const newTodo = {
+      startAt: "2023-10-14T04:29:05.123Z",
+      dueDate: "2023-10-23T01:37:05.695Z"
+    };
+    const token = localStorage.getItem('token');
+    console.log(token)
+    axios.post('http://127.0.0.1:3333/tasks/6a02451e-89dc-49ec-bc90-6639fcd540bd', newTodo, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+
+    })
+      .then((response) => {
+        console.log(response.data);
+        // setTodos([...todos, newTodo]);
+      })
+      .catch((error) => {
+        console.error('Erro ao adicionar tarefa no servidor:', error);
+      });
+
     if (newTodoInput.current) {
       newTodoInput.current.value = '';
     }
   }
 
-  function toggleTodo(id: string) {
-    const newTodos = [...todos];
-    const selectedTask = newTodos.find((todo) => todo.id === id);
-    if (selectedTask) {
-      selectedTask.complete = !selectedTask.complete;
-      setTodos(newTodos);
-    }
+
+  function toggleTodo() {
+    // Realize uma solicitação GET para buscar os dados da tarefa
+    const token = localStorage.getItem('token');
+
+    axios.get(`http://127.0.0.1:3333/tasks/6a02451e-89dc-49ec-bc90-6639fcd540bd`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then((response) => {
+        const taskData = response.data;
+        console.log(taskData)
+        // Clone a lista de todos
+        const newTodos = [...taskData];
+
+
+        // Encontre a tarefa pelo ID
+        const selectedTask = newTodos.find((todo) => todo.id === id);
+
+        if (selectedTask) {
+          // Atualize o estado da tarefa com os dados buscados
+          selectedTask.complete = taskData.complete;
+
+          // Atualize o estado dos todos
+          setTodos(newTodos);
+        }
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar tarefa do servidor:', error);
+      });
   }
+
+
+  // function toggleTodo(id: string) {
+  //   const newTodos = [...todos];
+  //   const selectedTask = newTodos.find((todo) => todo.id === id);
+  //   if (selectedTask) {
+  //     selectedTask.complete = !selectedTask.complete;
+  //     setTodos(newTodos);
+  //   }
+  // }
 
   function showConfirmation() {
     return window.confirm('Tem certeza de que deseja excluir todas as tarefas completas?');
@@ -157,6 +225,7 @@ function App() {
 
   return (
     <ThemeProvider theme={colorTheme === 'light' ? lightTheme : darkTheme}>
+      <CadastrarUsuario />
       <StyledMain>
         <GlobalStyles />
         <StyledBanner />
@@ -179,7 +248,10 @@ function App() {
           handleClear={handleClear}
         />
       </StyledMain>
+
     </ThemeProvider>
+
+
   );
 }
 
