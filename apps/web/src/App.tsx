@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
-// import { v4 as uuidv4 } from 'uuid';
 import { lightTheme, darkTheme } from './themes';
 import GlobalStyles from './styled/Global';
 import { StyledMain } from './styled/Main.styled';
@@ -10,28 +9,31 @@ import TodoInput from './components/TodoInput';
 import TodoList from './components/TodoList';
 import TodoFilters from './components/TodoFilters';
 import TodoFooter from './components/TodoFooter';
-import CadastrarUsuario from './components/cadastro'
+import CadastrarUsuario, { usuarioId } from './components/cadastro';
 import axios from 'axios';
 
-const LOCAL_STORAGE_KEY = 'todoApp.todos';
-
 interface Todo {
-  id: string;
-  todoName: string;
-  complete: boolean;
-  overdue: boolean;
+  todoName: string,
+  isCompleted: boolean,
+  overdue: boolean,
+  usuarioId: string,
+  description: string,
+  startAt: Date,
+  dueDate: Date
 }
 
 
-function App() {
+const App: React.FC<Todo> = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<string>('todas');
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [allFilterActive, setAllFilterActive] = useState<boolean>(true);
   const [activeFilterActive, setActiveFilterActive] = useState<boolean>(false);
-  const [completedFilterActive, setCompletedFilterActive] = useState<boolean>(false);
+  const [isCompletedFilterActive, setisCompletedFilterActive] = useState<boolean>(false);
   const [overdueFilterActive, setOverdueFilterActive] = useState<boolean>(false);
-  const [isComponentMounted, setIsComponentMounted] = useState<boolean>(false);
+
+
+
 
   const newTodoInput = useRef<HTMLInputElement | null>(null);
 
@@ -41,62 +43,40 @@ function App() {
   const [colorTheme, setColorTheme] = useState<string>('light');
 
 
-  useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]') as Todo[];
-    if (storedTodos) {
-      setTodos(storedTodos);
-      setFilter('todas');
-      setFilteredTodos(storedTodos);
-    }
-    setIsComponentMounted(true);
-  }, []);
 
-  useEffect(() => {
-    if (isComponentMounted) {
-      if (todos.length !== 0) {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos));
-      } else {
-        localStorage.removeItem(LOCAL_STORAGE_KEY);
-      }
-    }
-  });
 
-  // function handleAddTodo() {
-  //   const todoName = newTodoInput.current?.value;
-  //   if (!todoName) {
-  //     return;
-  //   }
-  //   setTodos([...todos, { id: uuidv4(), todoName, complete: false, overdue: false }]);
-  //   if (newTodoInput.current) {
-  //     newTodoInput.current.value = '';
-  //   }
-  // }
-
-  function handleAddTodo() {
+  async function handleAddTodo(title: string) {
     const todoName = newTodoInput.current?.value;
     if (!todoName) {
       return;
     }
 
     const newTodo = {
+      title: title,
+      description: "Test 12",
+      isisCompletedd: false,
       startAt: "2023-10-14T04:29:05.123Z",
       dueDate: "2023-10-23T01:37:05.695Z"
     };
-    const token = localStorage.getItem('token');
-    console.log(token)
-    axios.post('http://127.0.0.1:3333/tasks/6a02451e-89dc-49ec-bc90-6639fcd540bd', newTodo, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
 
-    })
-      .then((response) => {
-        console.log(response.data);
-        // setTodos([...todos, newTodo]);
-      })
-      .catch((error) => {
-        console.error('Erro ao adicionar tarefa no servidor:', error);
-      });
+
+    console.log(newTodo);
+
+    
+
+    const findId = usuarioId;
+    const baseUrl = `http://127.0.0.1:3333/tasks/${findId}`;
+
+    try {
+      const response = await axios.post(baseUrl, newTodo);
+
+      console.log("Tarefa adicionada:", response.data);
+
+      toggleTodo()
+
+    } catch (error) {
+      console.error('Erro ao adicionar tarefa no servidor:', error);
+    }
 
     if (newTodoInput.current) {
       newTodoInput.current.value = '';
@@ -104,54 +84,32 @@ function App() {
   }
 
 
-  function toggleTodo() {
-    // Realize uma solicitação GET para buscar os dados da tarefa
-    const token = localStorage.getItem('token');
+  async function toggleTodo() {
+    const findId = usuarioId;
+    const baseUrl = `http://127.0.0.1:3333/tasks/${findId}`;
+    console.log("Requisitando as tasks na rota", baseUrl);
 
-    axios.get(`http://127.0.0.1:3333/tasks/6a02451e-89dc-49ec-bc90-6639fcd540bd`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-      .then((response) => {
-        const taskData = response.data;
-        console.log(taskData)
-        // Clone a lista de todos
-        const newTodos = [...taskData];
+    try {
+      const response = await axios.get(baseUrl);
+      const taskData = response.data.data;
+      console.log('Todas as tarefas cadastradas:', taskData);
 
-
-        // Encontre a tarefa pelo ID
-        const selectedTask = newTodos.find((todo) => todo.id === id);
-
-        if (selectedTask) {
-          // Atualize o estado da tarefa com os dados buscados
-          selectedTask.complete = taskData.complete;
-
-          // Atualize o estado dos todos
-          setTodos(newTodos);
-        }
-      })
-      .catch((error) => {
-        console.error('Erro ao buscar tarefa do servidor:', error);
-      });
+      setTodos(taskData);
+    } catch (error) {
+      console.error('Erro ao buscar tarefas do servidor:', error);
+    }
   }
 
 
-  // function toggleTodo(id: string) {
-  //   const newTodos = [...todos];
-  //   const selectedTask = newTodos.find((todo) => todo.id === id);
-  //   if (selectedTask) {
-  //     selectedTask.complete = !selectedTask.complete;
-  //     setTodos(newTodos);
-  //   }
-  // }
+
+
 
   function showConfirmation() {
     return window.confirm('Tem certeza de que deseja excluir todas as tarefas completas?');
   }
   function handleClear() {
     if (showConfirmation()) {
-      const remainingTodos = todos.filter((todo) => !todo.complete);
+      const remainingTodos = todos.filter((todo) => !todo.isCompleted);
       setTodos(remainingTodos);
     }
   }
@@ -162,7 +120,7 @@ function App() {
   }
 
   function countRemaining() {
-    const count = todos.filter((todo) => !todo.complete);
+    const count = todos.filter((todo) => !todo.isCompleted);
 
     if (count.length === 1) {
       return '1 Tarefa aberta';
@@ -180,20 +138,20 @@ function App() {
       setFilteredTodos(todos);
       setAllFilterActive(true);
       setActiveFilterActive(false);
-      setCompletedFilterActive(false);
+      setisCompletedFilterActive(false);
       setOverdueFilterActive(false);
     } else if (filter === 'incompletas') {
-      const activeTodos = todos.filter((todo) => !todo.complete);
+      const activeTodos = todos.filter((todo) => !todo.isCompleted);
       setFilteredTodos(activeTodos);
       setActiveFilterActive(true);
       setAllFilterActive(false);
-      setCompletedFilterActive(false);
+      setisCompletedFilterActive(false);
       setOverdueFilterActive(false);
     } else if (filter === 'completas') {
-      const completedTodos = todos.filter((todo) => todo.complete);
-      console.log(completedTodos)
-      setFilteredTodos(completedTodos);
-      setCompletedFilterActive(true);
+      const isCompletedTodos = todos.filter((todo) => todo.isCompleted);
+      console.log(isCompletedTodos)
+      setFilteredTodos(isCompletedTodos);
+      setisCompletedFilterActive(true);
       setAllFilterActive(false);
       setActiveFilterActive(false);
       setOverdueFilterActive(false);
@@ -204,7 +162,7 @@ function App() {
       setOverdueFilterActive(true);
       setAllFilterActive(false);
       setActiveFilterActive(false);
-      setCompletedFilterActive(false);
+      setisCompletedFilterActive(false);
     }
   }
 
@@ -235,7 +193,7 @@ function App() {
           setFilter={setFilter}
           allFilterActive={allFilterActive}
           activeFilterActive={activeFilterActive}
-          completedFilterActive={completedFilterActive}
+          isCompletedFilterActive={isCompletedFilterActive}
           overdueFilterActive={overdueFilterActive}
         />
         <TodoList
