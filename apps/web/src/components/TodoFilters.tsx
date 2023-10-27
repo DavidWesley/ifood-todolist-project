@@ -5,11 +5,11 @@ interface TodoFiltersProps {
   setFilter: (filter: string) => void;
   allFilterActive: boolean;
   activeFilterActive: boolean;
-  completedFilterActive: boolean;
+  isCompletedFilterActive: boolean;
   overdueFilterActive: boolean;
 }
 
-const TodoFilters: React.FC<TodoFiltersProps> = ({ setFilter, allFilterActive, activeFilterActive, completedFilterActive, overdueFilterActive }) => {
+const TodoFilters: React.FC<TodoFiltersProps> = ({ setFilter, allFilterActive, activeFilterActive, isCompletedFilterActive, overdueFilterActive }) => {
 
   function handleFilterAll() {
     setFilter('todas');
@@ -19,7 +19,7 @@ const TodoFilters: React.FC<TodoFiltersProps> = ({ setFilter, allFilterActive, a
     setFilter('incompletas');
   }
 
-  function handleFilterComplete() {
+  function handleFilterisCompleted() {
     setFilter('completas');
   }
 
@@ -32,7 +32,7 @@ const TodoFilters: React.FC<TodoFiltersProps> = ({ setFilter, allFilterActive, a
       <div className="filters">
         <button className={allFilterActive ? "filter active-filter" : "filter"} onClick={handleFilterAll}>Todas</button>
         <button className={activeFilterActive ? "filter active-filter" : "filter"} onClick={handleFilterActive}>Abertas</button>
-        <button className={completedFilterActive ? "filter active-filter" : "filter"} onClick={handleFilterComplete}>Completas</button>
+        <button className={isCompletedFilterActive ? "filter active-filter" : "filter"} onClick={handleFilterisCompleted}>Completas</button>
         <button className={overdueFilterActive ? "filter active-filter" : "filter"} onClick={handleFilterOverdue}>Atrasadas</button>
       </div>
     </StyledFilters>
