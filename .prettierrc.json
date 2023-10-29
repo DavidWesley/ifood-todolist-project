@@ -14,7 +14,15 @@
       "options": {
         "tabWidth": 2
       }
+    },
+    {
+      "files": "*.tsx",
+      "options": {
+        "printWidth": 100,
+        "tabWidth": 2
+      }
     }
   ],
+  "jsxSingleQuote": true,
   "bracketSpacing": true
 }
