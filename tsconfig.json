@@ -10,10 +10,9 @@
   "references": [
     {
       "path": "./apps/server/tsconfig.json"
+    },
+    {
+      "path": "./apps/web/tsconfig.json"
     }
-    // TODO,
-    // {
-    //   "path": "web/tsconfig.json"
-    // }
   ]
 }
