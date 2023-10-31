@@ -27,7 +27,7 @@
   "homepage": "https://github.com/DavidWesley/ifood-todolist-project",
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.4",
-    "@types/node": "^20.8.7",
+    "@types/node": "^20.8.10",
     "cross-env": "^7.0.3",
     "pino-pretty": "^10.2.3",
     "tsup": "^7.2.0"
