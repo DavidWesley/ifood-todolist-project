@@ -1,14 +1,15 @@
 import type { FastifyInstance } from "fastify"
 
+import authServices from "@/services/auth.ts"
 import usersServices from "@/services/users.ts"
 
 export async function usersRoutes(app: FastifyInstance) {
-    // app.addHook("onRequest", authServices.checkUserIsAuthenticated)
+    app.addHook("onRequest", authServices.authenticateAccessToken)
 
     app.get(
         "/:userId",
         {
-            preHandler: [usersServices.checkUserExistsById],
+            preHandler: [usersServices.checkUserExistsById, authServices.checkUserIsAuthenticated],
         },
         usersServices.getUserById
     )
@@ -16,7 +17,7 @@ export async function usersRoutes(app: FastifyInstance) {
     app.delete(
         "/:userId",
         {
-            preHandler: [usersServices.checkUserExistsById],
+            preHandler: [usersServices.checkUserExistsById, authServices.checkUserIsAuthenticated],
         },
         usersServices.deleteUserById
     )
@@ -24,7 +25,7 @@ export async function usersRoutes(app: FastifyInstance) {
     app.put(
         "/:userId",
         {
-            preHandler: [usersServices.checkUserExistsById],
+            preHandler: [usersServices.checkUserExistsById, authServices.checkUserIsAuthenticated],
         },
         usersServices.updateUser
     )

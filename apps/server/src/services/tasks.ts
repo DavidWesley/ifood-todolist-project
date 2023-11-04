@@ -1,8 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { StatusCodes } from "http-status-codes"
 
-import tasksRepository from "@/repositories/tasks.ts"
 import { createTaskBodySchema, taskAndUserParamsSchema, taskParamsSchema, updateTaskBodySchema, userParamsSchema } from "@/schemas/zod.ts"
+
+import tasksRepository from "@/repositories/tasks.ts"
 
 //// HOOKS ////
 const checkTaskExists = async (request: FastifyRequest, response: FastifyReply) => {
@@ -20,32 +21,6 @@ const checkTaskExists = async (request: FastifyRequest, response: FastifyReply) 
         response.code(StatusCodes.NOT_FOUND).send({
             error: {
                 message: "Tarefa não encontrada",
-                scope,
-            },
-        })
-    }
-}
-
-const checkTaskOwnerIsAuthenticated = async (request: FastifyRequest, response: FastifyReply) => {
-    const scope = checkTaskOwnerIsAuthenticated.name.toString()
-    const params = taskAndUserParamsSchema.safeParse(request.params)
-
-    if (params.success === false) {
-        return response.code(StatusCodes.BAD_REQUEST).send({
-            error: {
-                message: "Invalid params",
-                scope,
-            },
-        })
-    }
-
-    const { userId, taskId } = params.data
-    const task = await tasksRepository.findById(taskId)
-
-    if (task?.userId !== userId) {
-        return response.status(StatusCodes.UNAUTHORIZED).send({
-            error: {
-                message: "Usuário não autorizado",
                 scope,
             },
         })
@@ -130,7 +105,6 @@ const updateTask = async (request: FastifyRequest, response: FastifyReply) => {
 }
 
 const tasksServices = {
-    checkTaskOwnerIsAuthenticated,
     checkTaskExists,
     getAllUserTasks,
     createTask,
