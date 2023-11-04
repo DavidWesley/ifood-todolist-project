@@ -3,9 +3,10 @@ import { StatusCodes } from "http-status-codes"
 
 import { hashPassword } from "@/lib/crypto.ts"
 import { UserModel } from "@/models/users.ts"
+import { createUserBodySchema, updateUserBodySchema, userParamsSchema } from "@/schemas/zod.ts"
+
 import tasksRepository from "@/repositories/tasks.ts"
 import usersRepository from "@/repositories/users.ts"
-import { createUserBodySchema, updateUserBodySchema, userParamsSchema } from "@/schemas/zod.ts"
 
 //// HOOKS ////
 const checkUserExistsById = async (request: FastifyRequest, response: FastifyReply) => {
@@ -46,6 +47,38 @@ const checkUserExistsByProperties = async (request: FastifyRequest, response: Fa
         return response.code(StatusCodes.NOT_FOUND).send({
             error: {
                 message: "Usuário não encontrado",
+                scope,
+            },
+        })
+    }
+}
+
+const throwIfUserAlreadyExists = async (request: FastifyRequest, response: FastifyReply) => {
+    const scope = throwIfUserAlreadyExists.name.toString()
+    const body = createUserBodySchema.safeParse(request.body)
+
+    if (body.success === false) {
+        return response.code(StatusCodes.BAD_REQUEST).send({
+            error: {
+                message: "Invalid body",
+                scope,
+            },
+        })
+    }
+
+    if ((await usersRepository.findByEmail(body.data.email)) !== null) {
+        return response.status(StatusCodes.CONFLICT).send({
+            error: {
+                message: "Could not create user, email already exists",
+                scope,
+            },
+        })
+    }
+
+    if ((await usersRepository.findByUsername(body.data.username)) !== null) {
+        return response.status(StatusCodes.CONFLICT).send({
+            error: {
+                message: "Could not create user, username already exists",
                 scope,
             },
         })
@@ -132,6 +165,7 @@ const getAllUser = async (_: FastifyRequest, response: FastifyReply) => {
 const usersServices = {
     checkUserExistsById,
     checkUserExistsByProperties,
+    throwIfUserAlreadyExists,
     getUserById,
     createUser,
     updateUser,
