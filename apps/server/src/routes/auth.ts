@@ -4,7 +4,13 @@ import authServices from "@/services/auth.ts"
 import usersServices from "@/services/users.ts"
 
 export async function authRoutes(app: FastifyInstance) {
-    app.post("/register", usersServices.createUser)
+    app.post(
+        "/register",
+        {
+            preHandler: [usersServices.throwIfUserAlreadyExists],
+        },
+        usersServices.createUser
+    )
 
     app.post(
         "/login",
