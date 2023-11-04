@@ -1,3 +1,10 @@
+import { Layout } from "@/layouts/Layout"
+import { Page } from "@/pages/Page"
+
 export default function App() {
-  return <h1>Hello, World!</h1>
+  return (
+    <Layout>
+      <Page />
+    </Layout>
+  )
 }
