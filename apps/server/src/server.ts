@@ -6,9 +6,9 @@ import { StatusCodes } from "http-status-codes"
 import { ENV } from "@/lib/env.ts"
 import { logger } from "@/lib/logger.ts"
 
+import { authRoutes } from "@/routes/auth.ts"
 import { tasksRoutes } from "@/routes/tasks.ts"
 import { usersRoutes } from "@/routes/users.ts"
-import { authRoutes } from "./routes/auth.ts"
 
 export const server = Fastify({
     logger: logger[ENV.NODE_ENV] ?? false,
