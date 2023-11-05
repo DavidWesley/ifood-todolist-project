@@ -31,10 +31,6 @@ server.register(fastifyRateLimit, {
     continueExceeding: false,
 })
 
-server.get("/", async (_, res) => {
-    return res.status(StatusCodes.OK).send("Home page")
-})
-
 server.get("/check", async (_, res) => {
     return res.status(StatusCodes.OK).send()
 })
