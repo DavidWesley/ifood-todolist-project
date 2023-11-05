@@ -5,6 +5,7 @@ import { verifyPassword } from "@/libs/crypto.ts"
 import { generateAccessToken, verifyAccessToken } from "@/libs/jwt.ts"
 import { loginUserBodySchema, taskAndUserParamsSchema, userParamsSchema, uuidSchema } from "@/schemas/zod.ts"
 
+import { UserModel } from "@/models/users.ts"
 import tasksRepository from "@/repositories/tasks.ts"
 import usersRepository from "@/repositories/users.ts"
 
@@ -108,8 +109,15 @@ const loginUser = async (request: FastifyRequest, response: FastifyReply) => {
     }
 
     try {
+        const shareableUserData: Omit<UserModel, "hash" | "salt"> = {
+            id: user.id!,
+            email: user.email,
+            username: user.username,
+        }
+
         const accessToken = generateAccessToken({}, { subject: user.id, expiresIn: "1h" })
-        return response.status(StatusCodes.OK).send({ token: accessToken })
+
+        return response.status(StatusCodes.OK).send({ token: accessToken, user: shareableUserData })
     } catch (err) {
         response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
             error: {
