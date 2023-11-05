@@ -3,8 +3,8 @@ import { fastifyRateLimit } from "@fastify/rate-limit"
 import Fastify from "fastify"
 import { StatusCodes } from "http-status-codes"
 
-import { ENV } from "@/lib/env.ts"
-import { logger } from "@/lib/logger.ts"
+import { ENV } from "@/libs/env.ts"
+import { logger } from "@/libs/logger.ts"
 
 import { authRoutes } from "@/routes/auth.ts"
 import { tasksRoutes } from "@/routes/tasks.ts"

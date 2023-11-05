@@ -1,4 +1,4 @@
-import { InMemoryModelQuery, UUID } from "@/lib/database/in-memory-table.ts"
+import { InMemoryModelQuery, UUID } from "@/libs/in-memory-table.ts"
 
 export interface Repository<M> {
     create(data: M): Promise<UUID | undefined>

@@ -1,5 +1,5 @@
-import { DateTimeString, InMemoryTable, InMemoryTableModel } from "@/lib/database/in-memory-table.ts"
-import { Validators } from "@/lib/database/validators/validators.ts"
+import { DateTimeString, InMemoryTable, InMemoryTableModel } from "@/libs/in-memory-table.ts"
+import { Validators } from "@/libs/validators.ts"
 import { UserModel } from "@/models/users.ts"
 
 export interface TaskModel extends Partial<InMemoryTableModel> {

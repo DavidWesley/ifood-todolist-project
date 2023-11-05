@@ -1,8 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { StatusCodes } from "http-status-codes"
 
-import { verifyPassword } from "@/lib/crypto.ts"
-import { generateAccessToken, verifyAccessToken } from "@/lib/jwt.ts"
+import { verifyPassword } from "@/libs/crypto.ts"
+import { generateAccessToken, verifyAccessToken } from "@/libs/jwt.ts"
 import { loginUserBodySchema, taskAndUserParamsSchema, userParamsSchema, uuidSchema } from "@/schemas/zod.ts"
 
 import tasksRepository from "@/repositories/tasks.ts"
