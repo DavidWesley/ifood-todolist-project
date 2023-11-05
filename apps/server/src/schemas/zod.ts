@@ -1,5 +1,5 @@
-import { DateTimeString, InMemoryTableModel } from "@/lib/database/in-memory-table.ts"
-import { Validators } from "@/lib/database/validators/validators.ts"
+import { DateTimeString, InMemoryTableModel } from "@/libs/in-memory-table.ts"
+import { Validators } from "@/libs/validators.ts"
 import { TaskModel } from "@/models/tasks.ts"
 import { UserModel } from "@/models/users.ts"
 import { z } from "zod"

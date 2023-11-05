@@ -1,4 +1,4 @@
-import { DateTimeString, UUID } from "../in-memory-table.ts"
+import type { DateTimeString, UUID } from "@/libs/in-memory-table.ts"
 
 export type ValidatorFunction = (value: string) => boolean
 

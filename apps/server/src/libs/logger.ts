@@ -1,4 +1,4 @@
-import { ENV } from "@/lib/env.ts"
+import { ENV } from "@/libs/env.ts"
 import { FastifyServerOptions } from "fastify"
 
 export const logger: Record<(typeof ENV)["NODE_ENV"], FastifyServerOptions["logger"]> = {

@@ -1,5 +1,5 @@
-import { database } from "@/lib/database/database.ts"
-import { DateTimeString, InMemoryModelQuery, InMemoryTableModel, UUID } from "@/lib/database/in-memory-table.ts"
+import { database } from "@/libs/database.ts"
+import { DateTimeString, InMemoryModelQuery, InMemoryTableModel, UUID } from "@/libs/in-memory-table.ts"
 import { TaskModel } from "@/models/tasks.ts"
 import { Repository } from "@/repositories/default.ts"
 

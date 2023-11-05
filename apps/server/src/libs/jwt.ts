@@ -1,4 +1,4 @@
-import { ENV } from "@/lib/env.ts"
+import { ENV } from "@/libs/env.ts"
 import jwt from "jsonwebtoken"
 
 export function generateAccessToken(payload: jwt.JwtPayload, options?: jwt.SignOptions): string {

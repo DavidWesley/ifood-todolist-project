@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { StatusCodes } from "http-status-codes"
 
-import { hashPassword } from "@/lib/crypto.ts"
+import { hashPassword } from "@/libs/crypto.ts"
 import { UserModel } from "@/models/users.ts"
 import { createUserBodySchema, updateUserBodySchema, userParamsSchema } from "@/schemas/zod.ts"
 
