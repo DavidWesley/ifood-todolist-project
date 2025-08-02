@@ -43,8 +43,8 @@
     }
   ],
   "devDependencies": {
-    "@commitlint/cli": "^19.6.1",
-    "@commitlint/config-conventional": "^19.6.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@tsconfig/strictest": "^2.0.5",
     "@typescript-eslint/eslint-plugin": "^8.18.1",
     "@typescript-eslint/parser": "^8.18.1",
@@ -56,6 +56,6 @@
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "tsx": "^4.20.3",
-    "typescript": "^5.7.2"
+    "typescript": "^5.9.2"
   }
 }
